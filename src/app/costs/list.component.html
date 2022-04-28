@@ -1,0 +1,80 @@
+﻿<div class="clearfix">
+<h1 class="pull-left">Costs</h1>
+<div class="col-md-3 pull-right">
+  <label>Currency</label> : {{selectedValue}}
+<select name="selectedValue" id="aantal" class="form-control pull-right" [(ngModel)]="selectedValue"  (ngModelChange)="onChange($event)">
+  <option *ngFor="let option of options" [value]="option | json" >{{option.toCurrency}}</option>
+</select>
+</div>
+</div>
+<br/>
+
+<div class="container" *ngFor="let cost of costs.costs" >
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Screened
+            <div class="col-md-3">
+              {{cost.name}}
+            </div>
+            <div class="col-md-3">
+              Account Code
+            </div>
+            <div class="col-md-3">
+              Quoted
+            </div>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <thead class="panel-heading">
+            <tr>
+              <th style="width: 30%">{{cost.name}}</th>
+              <th style="width: 30%">Account Code</th>
+              <th style="width: 30%">Quoted</th>
+              <th style="width: 10%">Screened</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let costItem of cost.costItems">
+              <td>{{costItem.name}}</td>
+              <td>{{costItem.costItemAlias.accountingCode}}</td>
+              <td>
+                <div><span class="text-muted">{{costs.daCurrency.currency}}</span>  {{exchangeRate == null ? costItem.costs[0].amount : getExchangeRate(costItem.costs[0].amount)}}
+                </div>
+                <div><span class="text-muted">USD {{getUSDValue(costs, costItem.costs[0].amount)}}</span>
+                </div>
+              </td>
+              <td>
+                <div><span class="text-muted">{{costs.daCurrency.currency}}</span>  {{exchangeRate == null ? costItem.costs[1].amount : getExchangeRate(costItem.costs[1].amount)}}
+                </div>
+                <div><span class="text-muted">USD {{getUSDValue(costs, costItem.costs[1].amount)}}</span>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!cost.costItems">
+              <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="panel-footer col-md-12">
+            <div class="col-md-6">Total</div>
+            <div class="col-md-6">
+            <div class="col-md-3 col-md-offset-2">
+              <span class="text-muted">{{costs.daCurrency.currency}}</span> {{exchangeRate == null ? getTotalQuoted(cost) : getExchangeRate(getTotalQuoted(cost))}}
+              <span class="text-muted">USD {{getTotalUSDValue(costs, getTotalQuoted(cost))}}</span>
+            </div>
+            <div class="col-md-3 pull-right">
+              <span class="text-muted">{{costs.daCurrency.currency}}</span> {{exchangeRate == null ? getTotalScreened(cost) : getExchangeRate(getTotalScreened(cost))}}
+              <span class="text-muted">USD {{getTotalUSDValue(costs, getTotalScreened(cost))}}</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
